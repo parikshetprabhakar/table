@@ -4,11 +4,6 @@ $(document).ready(function() {
         });
         var counter = 1;
         var checkmark = '<label class="container"><input type="checkbox"><span class="checkmark"></span></label>';
-
-        // var tableData = [
-        //     { sNumber: '1', firstName: "John", lastName: 'walker', superhero: "shaktiman", email: 'jony@gmail.com', gender: 'M', age: '32' },
-        // ];
-
         var tableData;
         var CheckTableData = JSON.parse(localStorage.getItem('tableData'))
         if (CheckTableData != null) {
@@ -49,6 +44,7 @@ $(document).ready(function() {
             var newRecord = { sNumber: counter, firstName: $("#firstName").val(), lastName: $("#lastName").val(), superhero: $("#superhero").val(), email: $("#email").val(), gender: $("#gender").val(), age: $("#age").val() };
             var TempTable = JSON.parse(localStorage.getItem('tableData'));
             TempTable.push(newRecord);
+            tableData = TempTable;
             localStorage.setItem('tableData', JSON.stringify(TempTable));
             counter++;
             listCheckBox();
@@ -66,6 +62,7 @@ $(document).ready(function() {
                         sel = true; //set to true if there is/are selected row
                         $this.parents('tr').fadeOut(function() {
                             var deletSerialNo = $(this).find("td:nth-child(2)").text();
+                            console.log(deletSerialNo);
                             deletSerialNo = deletSerialNo - 1;
                             tableData.splice(deletSerialNo, 1);
                             $this.remove(); //remove row when animation is finished
