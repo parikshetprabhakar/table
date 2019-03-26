@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <style type="text/css">
+    .transparent {
+        background: transparent;
+        border-radius: 30px;
+        padding: 5px 10px;
+        min-width: 150px;
+        margin: 0 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .transparent:focus {
+        outline: none;
+    }
+
+    .add-record {
+        border: 1px solid #82dcdc;
+        color: #82dcdc;
+    }
+
+    .delete {
+        border: 1px solid #ff4500;
+        color: #ff4500;
+    }
+
+    .function-button-wrapper {
+        right: 16%;
+        top: 0;
+        z-index: 100;
+    }
+
+    .table-wrapper {
+        margin-top: 50px;
+    }
+
+    td,
+    th {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    #example_filter input {
+        border: 1px solid black;
+        border-radius: 29px;
+        width: 180px;
+        padding: 2px 15px 2px 40px;
+        position: relative;
+    }
+
+    #example_filter {
+        position: relative;
+        margin-right: 15px;
+    }
+
+    #example_filter::before {
+        content: '';
+        position: absolute;
+        background-image: url(search.png);
+        background-size: contain;
+        width: 20px;
+        height: 20px;
+        z-index: 10;
+        left: 18px;
+        top: 6px;
+    }
+
+    table.dataTable.display tbody tr.odd {
+        background: #d4e9ff;
+    }
+
+    table.dataTable.display tbody tr.odd>.sorting_1 {
+        background: #d4e9ff;
+    }
+
+    table.dataTable.display tbody tr.even {
+        background: #C3E6CB;
+    }
+
+    table.dataTable.display tbody tr.even>.sorting_1 {
+        background: #C3E6CB;
+    }
+
+    table.dataTable.display tbody tr.odd:hover,
+    table.dataTable.display tbody tr.odd:hover .sorting_1 {
+        background: #8cc4ff !important;
+    }
+
+    table.dataTable.display tbody tr.even:hover,
+    table.dataTable.display tbody tr.even:hover .sorting_1 {
+        background: #81bf8f !important;
+    }
+
+    table.dataTable.display tbody tr.selected,
+    table.dataTable.display tbody tr.selected:hover,
+    table.dataTable.display tbody tr.selected .sorting_1,
+    table.dataTable.display tbody tr.selected:hover .sorting_1 {
+        background: #ef8787 !important;
+    }
+
+    /* Customize the label (the container) */
+    .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: -6px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        height: 25px;
+        width: 25px;
+        background-color: white;
+        border: 1px solid black;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input~.checkmark {
+        background-color: white;
+        border: 1px solid black;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container input:checked~.checkmark {
+        /*  background-color: #2196F3;*/
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container input:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    table.dataTable thead .sorting_asc {
+        background: none;
+    }
+
+    .dataTables_length select {
+        background: transparent;
+        padding: 0 10px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="position-relative table-wrapper">
+        <div class="function-button-wrapper position-absolute d-flex">
+            <button type="button" id="deleteall" class="transparent delete ">
+                Delete
+            </button>
+            <button type="button" class="transparent add-record" data-toggle="modal" data-target="#exampleModal">
+                Add a record
+            </button>
+        </div>
+        <table id="example" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Superhero Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Fill values</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName">
+                            </div>
+                            <div class="form-group">
+                                <label for="superhero">Superhero Name</label>
+                                <input type="text" class="form-control" id="superhero" name="superhero">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="firstName">Gender</label>
+                                <select class="form-control" id="gender" name="gender">
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="X">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" class="form-control" id="age" name="age">
+                            </div>
+                            <button type="button" id="submitDetails" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="table.js"></script>
+</body>
+
+</html>
